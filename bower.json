@@ -1,8 +1,8 @@
 {
   "name": "easyrtc",
-  "main": "api/easyrtc.js",
+  "main": "/demos/demo_audio_video.html",
   "version": "1.1.1-beta",
-  "homepage": "http://easyrtc.com/",
+  "homepage": "http://easyrtc.com/demos/",
   "authors": [
     "Rod Apeldoorn <rod.apeldoorn@priologic.com>",
     "Eric Davies <eric.davies@priologic.com>",
