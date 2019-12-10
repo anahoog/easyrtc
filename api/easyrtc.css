@@ -1,17 +1,13 @@
-/*
- *  These styles define the appearance of the default error dialog box.
- */
 #easyrtcErrorDialog {
     background-color: #ffe0e0;
-
-    position:fixed;
+    position:absolute;
     right: 10px;
     top:20px;
     z-index: 30;
     opacity: 0.95;
     padding: 0.5em;
     border-radius:10px;
-    border-color: red;
+    border-color: #222;
     border-style: solid;
     border-width: 1px;
     -webkit-box-shadow: 2px 2px 8px 1px rgba(0,0,0,0.9);

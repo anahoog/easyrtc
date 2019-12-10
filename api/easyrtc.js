@@ -61,14 +61,6 @@ return {
 
 }));
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define('webrtc-adapter',[],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.adapter = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-/*
- *  Copyright (c) 2017 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
 
 
 var SDPUtils = require('sdp');
@@ -86,11 +78,9 @@ function fixStatsType(stat) {
 function writeMediaSection(transceiver, caps, type, stream, dtlsRole) {
   var sdp = SDPUtils.writeRtpDescription(transceiver.kind, caps);
 
-  // Map ICE parameters (ufrag, pwd) to SDP.
   sdp += SDPUtils.writeIceParameters(
       transceiver.iceGatherer.getLocalParameters());
 
-  // Map DTLS parameters to SDP.
   sdp += SDPUtils.writeDtlsParameters(
       transceiver.dtlsTransport.getLocalParameters(),
       type === 'offer' ? 'actpass' : dtlsRole || 'active');
@@ -111,15 +101,12 @@ function writeMediaSection(transceiver, caps, type, stream, dtlsRole) {
     var trackId = transceiver.rtpSender._initialTrackId ||
         transceiver.rtpSender.track.id;
     transceiver.rtpSender._initialTrackId = trackId;
-    // spec.
     var msid = 'msid:' + (stream ? stream.id : '-') + ' ' +
         trackId + '\r\n';
     sdp += 'a=' + msid;
-    // for Chrome. Legacy should no longer be required.
     sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].ssrc +
         ' ' + msid;
 
-    // RTX
     if (transceiver.sendEncodingParameters[0].rtx) {
       sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].rtx.ssrc +
           ' ' + msid;
@@ -139,11 +126,6 @@ function writeMediaSection(transceiver, caps, type, stream, dtlsRole) {
   return sdp;
 }
 
-// Edge does not like
-// 1) stun: filtered after 14393 unless ?transport=udp is present
-// 2) turn: that does not have all of turn:host:port?transport=udp
-// 3) turn: with ipv6 addresses
-// 4) turn: occurring muliple times
 function filterIceServers(iceServers, edgeVersion) {
   var hasTurn = false;
   iceServers = JSON.parse(JSON.stringify(iceServers));
@@ -178,7 +160,6 @@ function filterIceServers(iceServers, edgeVersion) {
   });
 }
 
-// Determines the intersection of local and remote capabilities.
 function getCommonCapabilities(localCapabilities, remoteCapabilities) {
   var commonCapabilities = {
     codecs: [],
@@ -292,7 +273,6 @@ function maybeAddCandidate(iceTransport, candidate) {
 function makeError(name, description) {
   var e = new Error(description);
   e.name = name;
-  // legacy error codes from https://heycam.github.io/webidl/#idl-DOMException-error-names
   e.code = {
     NotSupportedError: 9,
     InvalidStateError: 11,
@@ -304,9 +284,6 @@ function makeError(name, description) {
 }
 
 module.exports = function(window, edgeVersion) {
-  // https://w3c.github.io/mediacapture-main/#mediastream
-  // Helper function to add the track to the stream and
-  // dispatch the event ourselves.
   function addTrackToStreamAndFireEvent(track, stream) {
     stream.addTrack(track);
     stream.dispatchEvent(new window.MediaStreamTrackEvent('addtrack',
@@ -399,8 +376,6 @@ module.exports = function(window, edgeVersion) {
 
     this._config = config;
 
-    // per-track iceGathers, iceTransports, dtlsTransports, rtpSenders, ...
-    // everything that is needed to describe a SDP m-line.
     this.transceivers = [];
 
     this._sdpSessionId = SDPUtils.generateSessionId();
@@ -424,7 +399,6 @@ module.exports = function(window, edgeVersion) {
     }
   });
 
-  // set up event handlers on prototype
   RTCPeerConnection.prototype.onicecandidate = null;
   RTCPeerConnection.prototype.onaddstream = null;
   RTCPeerConnection.prototype.ontrack = null;
@@ -543,9 +517,6 @@ module.exports = function(window, edgeVersion) {
         pc.addTrack(track, stream);
       });
     } else {
-      // Clone is necessary for local demos mostly, attaching directly
-      // to two different senders does not work (build 10547).
-      // Fixed in 15025 (or earlier)
       var clonedStream = stream.clone();
       stream.getTracks().forEach(function(track, idx) {
         var clonedTrack = clonedStream.getTracks()[idx];
@@ -585,7 +556,6 @@ module.exports = function(window, edgeVersion) {
     transceiver.track = null;
     transceiver.stream = null;
 
-    // remove the stream from the set of local streams
     var localStreams = this.transceivers.map(function(t) {
       return t.stream;
     });
@@ -647,8 +617,6 @@ module.exports = function(window, edgeVersion) {
     this.transceivers[sdpMLineIndex].bufferedCandidateEvents = [];
     this.transceivers[sdpMLineIndex].bufferCandidates = function(event) {
       var end = !event.candidate || Object.keys(event.candidate).length === 0;
-      // polyfill since RTCIceGatherer.state is not implemented in
-      // Edge 10547 yet.
       iceGatherer.state = end ? 'completed' : 'gathering';
       if (pc.transceivers[sdpMLineIndex].bufferedCandidateEvents !== null) {
         pc.transceivers[sdpMLineIndex].bufferedCandidateEvents.push(event);
@@ -659,7 +627,6 @@ module.exports = function(window, edgeVersion) {
     return iceGatherer;
   };
 
-  // start gathering from an RTCIceGatherer.
   RTCPeerConnection.prototype._gather = function(mid, sdpMLineIndex) {
     var pc = this;
     var iceGatherer = this.transceivers[sdpMLineIndex].iceGatherer;
@@ -673,20 +640,14 @@ module.exports = function(window, edgeVersion) {
       this.transceivers[sdpMLineIndex].bufferCandidates);
     iceGatherer.onlocalcandidate = function(evt) {
       if (pc.usingBundle && sdpMLineIndex > 0) {
-        // if we know that we use bundle we can drop candidates with
-        // ѕdpMLineIndex > 0. If we don't do this then our state gets
-        // confused since we dispose the extra ice gatherer.
         return;
       }
       var event = new Event('icecandidate');
       event.candidate = {sdpMid: mid, sdpMLineIndex: sdpMLineIndex};
 
       var cand = evt.candidate;
-      // Edge emits an empty object for RTCIceCandidateComplete‥
       var end = !cand || Object.keys(cand).length === 0;
       if (end) {
-        // polyfill since RTCIceGatherer.state is not implemented in
-        // Edge 10547 yet.
         if (iceGatherer.state === 'new' || iceGatherer.state === 'gathering') {
           iceGatherer.state = 'completed';
         }
@@ -694,9 +655,7 @@ module.exports = function(window, edgeVersion) {
         if (iceGatherer.state === 'new') {
           iceGatherer.state = 'gathering';
         }
-        // RTCIceCandidate doesn't have a component, needs to be added
         cand.component = 1;
-        // also the usernameFragment. TODO: update SDP to take both variants.
         cand.ufrag = iceGatherer.getLocalParameters().usernameFragment;
 
         var serializedCandidate = SDPUtils.writeCandidate(cand);
@@ -714,7 +673,6 @@ module.exports = function(window, edgeVersion) {
         };
       }
 
-      // update local description.
       var sections = SDPUtils.getMediaSections(pc._localDescription.sdp);
       if (!end) {
         sections[event.candidate.sdpMLineIndex] +=
@@ -782,8 +740,6 @@ module.exports = function(window, edgeVersion) {
     };
   };
 
-  // Destroy ICE gatherer, ICE transport and DTLS transport.
-  // Without triggering the callbacks.
   RTCPeerConnection.prototype._disposeIceAndDtlsTransports = function(
       sdpMLineIndex) {
     var iceGatherer = this.transceivers[sdpMLineIndex].iceGatherer;
@@ -821,7 +777,6 @@ module.exports = function(window, edgeVersion) {
       transceiver.rtpSender.send(params);
     }
     if (recv && transceiver.rtpReceiver && params.codecs.length > 0) {
-      // remove RTX field in Edge 14942
       if (transceiver.kind === 'video'
           && transceiver.recvEncodingParameters
           && edgeVersion < 15019) {
@@ -866,8 +821,6 @@ module.exports = function(window, edgeVersion) {
     var sections;
     var sessionpart;
     if (description.type === 'offer') {
-      // VERY limited support for SDP munging. Limited to:
-      // * changing the order of codecs
       sections = SDPUtils.splitSections(description.sdp);
       sessionpart = sections.shift();
       sections.forEach(function(mediaSection, sdpMLineIndex) {
@@ -891,7 +844,6 @@ module.exports = function(window, edgeVersion) {
         var localCapabilities = transceiver.localCapabilities;
         var remoteCapabilities = transceiver.remoteCapabilities;
 
-        // treat bundle-only as not-rejected.
         var rejected = SDPUtils.isRejected(mediaSection) &&
             SDPUtils.matchPrefix(mediaSection, 'a=bundle-only').length === 0;
 
@@ -915,12 +867,9 @@ module.exports = function(window, edgeVersion) {
             }
           }
 
-          // Calculate intersection of capabilities.
           var params = getCommonCapabilities(localCapabilities,
               remoteCapabilities);
 
-          // Start the RTCRtpSender. The RTCRtpReceiver for this
-          // transceiver has already been started in setRemoteDescription.
           pc._transceive(transceiver,
               params.codecs.length > 0,
               false);
@@ -944,7 +893,6 @@ module.exports = function(window, edgeVersion) {
   RTCPeerConnection.prototype.setRemoteDescription = function(description) {
     var pc = this;
 
-    // Note: pranswer is not supported.
     if (['offer', 'answer'].indexOf(description.type) === -1) {
       return Promise.reject(makeError('TypeError',
           'Unsupported type "' + description.type + '"'));
@@ -981,7 +929,6 @@ module.exports = function(window, edgeVersion) {
     sections.forEach(function(mediaSection, sdpMLineIndex) {
       var lines = SDPUtils.splitLines(mediaSection);
       var kind = SDPUtils.getKind(mediaSection);
-      // treat bundle-only as not-rejected.
       var rejected = SDPUtils.isRejected(mediaSection) &&
           SDPUtils.matchPrefix(mediaSection, 'a=bundle-only').length === 0;
       var protocol = lines[0].substr(2).split(' ')[2];
@@ -991,11 +938,8 @@ module.exports = function(window, edgeVersion) {
 
       var mid = SDPUtils.getMid(mediaSection) || SDPUtils.generateIdentifier();
 
-      // Reject datachannels which are not implemented yet.
       if (rejected || (kind === 'application' && (protocol === 'DTLS/SCTP' ||
           protocol === 'UDP/DTLS/SCTP'))) {
-        // TODO: this is dangerous in the case where a non-rejected m-line
-        //     becomes rejected.
         pc.transceivers[sdpMLineIndex] = {
           mid: mid,
           kind: kind,
@@ -1007,7 +951,6 @@ module.exports = function(window, edgeVersion) {
 
       if (!rejected && pc.transceivers[sdpMLineIndex] &&
           pc.transceivers[sdpMLineIndex].rejected) {
-        // recycle a rejected transceiver.
         pc.transceivers[sdpMLineIndex] = pc._createTransceiver(kind, true);
       }
 
@@ -1021,7 +964,6 @@ module.exports = function(window, edgeVersion) {
       var localCapabilities;
 
       var track;
-      // FIXME: ensure the mediaSection has rtcp-mux set.
       var remoteCapabilities = SDPUtils.parseRtpParameters(mediaSection);
       var remoteIceParameters;
       var remoteDtlsParameters;
@@ -1047,7 +989,6 @@ module.exports = function(window, edgeVersion) {
             return cand.component === 1;
           });
 
-      // Check if we can use BUNDLE and dispose transports.
       if ((description.type === 'offer' || description.type === 'answer') &&
           !rejected && usingBundle && sdpMLineIndex > 0 &&
           pc.transceivers[sdpMLineIndex]) {
@@ -1089,8 +1030,6 @@ module.exports = function(window, edgeVersion) {
 
         localCapabilities = window.RTCRtpReceiver.getCapabilities(kind);
 
-        // filter RTX until additional stuff needed for RTX is implemented
-        // in adapter.js
         if (edgeVersion < 15019) {
           localCapabilities.codecs = localCapabilities.codecs.filter(
               function(codec) {
@@ -1102,7 +1041,6 @@ module.exports = function(window, edgeVersion) {
           ssrc: (2 * sdpMLineIndex + 2) * 1001
         }];
 
-        // TODO: rewrite to use http://w3c.github.io/webrtc-pc/#set-associated-remote-streams
         var isNewTrack = false;
         if (direction === 'sendrecv' || direction === 'sendonly') {
           isNewTrack = !transceiver.rtpReceiver;
@@ -1112,9 +1050,7 @@ module.exports = function(window, edgeVersion) {
           if (isNewTrack) {
             var stream;
             track = rtpReceiver.track;
-            // FIXME: does not work with Plan B.
             if (remoteMsid && remoteMsid.stream === '-') {
-              // no-op. a stream id of '-' means: no associated stream.
             } else if (remoteMsid) {
               if (!streams[remoteMsid.stream]) {
                 streams[remoteMsid.stream] = new window.MediaStream();
@@ -1161,8 +1097,6 @@ module.exports = function(window, edgeVersion) {
         transceiver.sendEncodingParameters = sendEncodingParameters;
         transceiver.recvEncodingParameters = recvEncodingParameters;
 
-        // Start the RTCRtpReceiver now. The RTPSender is started in
-        // setLocalDescription.
         pc._transceive(pc.transceivers[sdpMLineIndex],
             false,
             isNewTrack);

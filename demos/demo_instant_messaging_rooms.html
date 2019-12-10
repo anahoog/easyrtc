@@ -1,40 +1,74 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <!--skip-->
-        <title>Hoog RTC: Chat Privado </title>
-        <link rel="stylesheet" type="text/css" href="../easyrtc/easyrtc.css" />
-        <link rel="stylesheet" type="text/css" href="css/landing.css" />
-
-        <script type="text/javascript" src="js/prettify/prettify.js"></script>
-        <link rel="stylesheet" type="text/css" href="js/prettify/prettify.css" />
-        <script type="text/javascript" src="js/prettify/loadAndFilter.js"></script>
-        <script type="text/javascript" src="js/prettify/jquery.min.js"></script>
+    <html class="w3-black">
+        <div>
+            <title>Hoog RTC: CHAT Privado</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            </div>
         
-	<script src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="../easyrtc/easyrtc.js"></script>
-        <script type="text/javascript" src="js/demo_instant_messaging_rooms.js"></script>
-        
-	<style type="text/css">
+        <head class=" w3-padding-32 w3-center " id="home">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />        
+            <title>Hoog RTC: Chat</title>
+            <link rel="stylesheet" type="text/css" href="../easyrtc/easyrtc.css" />
+            <link rel="stylesheet" type="text/css" href="css/landing.css" />
+            
+            <script type="text/javascript" src="js/prettify/prettify.js"></script>
+            <link rel="stylesheet" type="text/css" href="js/prettify/prettify.css" />
+            <script type="text/javascript" src="js/prettify/loadAndFilter.js"></script>
+            <script type="text/javascript" src="js/prettify/jquery.min.js"></script>
+            <script src="/socket.io/socket.io.js"></script>
+            <script type="text/javascript" src="../easyrtc/easyrtc.js"></script>
+            <script type="text/javascript" src="js/demo_instant_messaging_rooms.js"></script>
+     
+        <style type="text/css">
+         body, h1,h2,h3,h4,h5,h6 {
+                font-family: "Montserrat", sans-serif
+                }
+            .w3-row-padding img {
+                margin-bottom: auto
+                }
+            .w3-sidebar {
+                width: auto;
+                background: #222;
+                }
+            #main {
+                margin-left: auto;
+                background-color: black
+                }
+            @media only screen and (max-width: auto) {
+                #main {
+                    margin-left: 0
+                    }
+                }
             #stuffToSend {
                 width:300px;
+
             }
             #sendMessageArea{
                 float:left;
                 width:400px;
                 padding-right:20px;
+
             }
             #sendMessageText{
                 width:100%;
+                background-color: #111;
+
             }
             #conversation {
                 height:150px;
-                border:solid 1px gray;
+                border:solid 1px #111;
                 overflow-y:scroll;
+                background-color: #111;
+
             }
             .roomDiv {
                 margin-bottom: 15px;
-                background-color: antiquewhite;
+                background-color: #111;
             }
             .roomOccupants{
                 margin-left: 20px;
@@ -51,124 +85,152 @@
             #quickJoinBlock {
                 display: inline-block;
             }
-        </style>
-    </head>
-    <body onload="initApp();" >
-        <!--hide-->
-        <div id="container">
-            <div id="header">
-                <a href="index.html"><img id="logo_easyrtc" src="images/easyrtc_logo.png" alt="EasyRTC" style="" /></a>
-            </div>
-            <div id="menu">
-               
-            </div>
-            <div id="main">
+            </style>
 
-                <!-- Main Content -->
-                <h1>EasyRTC Demo: Instant Messaging + Rooms</h1>
-                <hr />
-                <h2>The Demo</h2>
-               
+    <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-black" style="display:none" id="mySidebar">
+        <button class="w3-bar-item w3-button w3-large" onclick="w3_close()">
+            Close &times;
+            </button>
+        <a href="/index.html" class="w3-bar-item w3-button w3-padding-large">
+            <i class="fa fa-home w3-large">
+                </i>
+            <p>
+                HOME
+                </p>
+            </a>
+            
+        <a href="demo_audio_only.html" class="w3-bar-item w3-button w3-padding-large ">
+            <i class="fas fa-phone-alt w3-large"></i>
+            <p>ÁUDIO</p>
+            </a>
+
+        <a href="demo_audio_video.html" class="w3-bar-item w3-button w3-padding-large ">
+            <i class="fas fa-video w3-large"></i>
+            <p>VÍDEO</p>
+            </a>
+        
+        <a href="demo_data_channel_messaging.html"class="w3-bar-item w3-button w3-padding-large ">
+                <i class="fas fa-comment w3-large">
+                </i>
+                <p>CHAT</p>
+            </a>
+            
+        <a href="demo_instant_messaging_rooms.html" class="w3-bar-item w3-button w3-padding-large">
+                <i class="fas fa-comment-dots w3-large"></i>
+                <p>SALAS</p>
+            </a>
+        </div>
+        
+    <div id="main" class="w3-center w3-black">
+        <button id="openNav" class="w3-button  w3-large w4-black" onclick="w3_open()">
+            &#9776
+            </button>
+        </div>
+   
+   <script>
+        function w3_open() {
+            document.getElementById("main").style.marginLeft = "10%";
+            document.getElementById("mySidebar").style.width = "10%";
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("openNav").style.display = 'none';
+            }
+     
+       function w3_close() {
+            document.getElementById("main").style.marginLeft = "0%";
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("openNav").style.display = "inline-block";
+            }
+        </script>
+    <header class=" w3-padding-32 w3-center w3-black">
+        <script src="https://kit.fontawesome.com/1cdf80c591.js" crossorigin="anonymous"></script>
+        </header>                   
+    </head>
+
+    <body onload="initApp();" >
+        <div id="container">
+            <div id="header" class="w3-center">
+                <h1>Chat - Salas</h1>
+                </div>
+            
+            <div id="menu">
+                </div>
+            <div id="main">           
                 <div class="preconnection">
-                   Usuário: <input type="text" id="userNameField" />
-                   Senha: <input type="text" id="credentialField" />
+                    Usuário: <input type="text" id="userNameField" />
+                    Senha: <input type="text" id="credentialField" />
                     <div >
                         <button id="connectButton" onclick="connect();">Conectar</button>
-                    </div>
+                        </div>
                     <hr>
-                </div>
-                <div class="postconnection">
-                    <button onclick="disconnect();">Disconnect from server.</button>
-                </div>
-                <div>
-                    Presence:
-                    <input type="radio" name="presence" onclick="setPresence('away');"/>away
-                    <input type="radio" name="presence" checked onclick="setPresence('chat');"/>chat
-                    <input type="radio" name="presence" onclick="setPresence('dnd');"/>dnd
-                    <input type="radio" name="presence" onclick="setPresence('xa');"/>xa
-                    <input type="text" onkeyup="updatePresenceStatus(this.value);" />
-                </div>
-                <hr>
-                <div >
+                    </div>
+                        
+                    <div class="postconnection">
+                        <button onclick="disconnect();">
+                            Desconectar do servidor.
+                            </button>
+                        </div>
+                    
+                    <div>
+                        Presence:
+                        <input type="radio" name="presence" onclick="setPresence('away');"/>Sempre
+                        <input type="radio" name="presence" checked onclick="setPresence('chat');"/>CHAT
+                        <input type="radio" name="presence" onclick="setPresence('dnd');"/>dnd
+                        <input type="radio" name="presence" onclick="setPresence('xa');"/>xa
+                        <input type="text" onkeyup="updatePresenceStatus(this.value);" />
+                        </div>
+                    <hr>
+                    
+                    <div >
                     Quick Join -
 
-                    <div id="quickJoinBlock"></div> <button onclick="refreshRoomList();"> Refresh</button>
-                    <button onclick="addRoom(null, null, true);">or join </button>
+                    <div id="quickJoinBlock"></div> <button onclick="refreshRoomList();">Atualizar</button>
+                    <button onclick="addRoom(null, null, true);">Participar </button>
                     <input id="roomToAdd" type="text" size="20" />
                     <br>
-                    Optional room parameters<input id="optRoomParms" type="text" size="20"/>
-
                 </div>
 
-                <div class="postconnection">
-                    <hr>
-                    <div id="sendMessageArea">
-
-                        <div id="iam">Not connected yet</div>
-                        <textarea id="sendMessageText" placeholder="Enter your message here"></textarea>
-
-                        Rooms:
-                        <div id="rooms"></div>
+            <div class="postconnection">
+                <hr>
+                <div id="sendMessageArea">
+                    <div id="iam">Status: Desconectado</div>
+                        <textarea id="sendMessageText" placeholder="Digite sua mensagem:">
+                            </textarea>
+                        Salas:
+                            <div id="rooms">
+                               </div>
                     </div>
                     <div id="receiveMessageArea">
-                        Received Messages:
-                        <div id="conversation"></div>
+                        Mensagens Recebidas
+                        <div id="conversation">
+
+                        </div>
                     </div>
                 </div>
-
                 <hr>
-                <div>
-
-                    <h3> Adding api fields</h3>
-                    <input type="text" id="apiroomname" placeholder="room name">
-                    <input type="text" id="apifieldname" placeholder="field name"><br>
-                    <input size="50" type="text" id="apifieldvalue" placeholder="field value"><br>
-                    <button onclick="addApiField()">Add the api field</button>
-                </div>
                 
-                <div>
-                    <h3>Getting the list of room occupants</h3>
-                    <input type="text" id="queryRoom" placeholder="room name">
-                    <button onclick="queryRoomNames();">Dump occupant names to console</button>
-                </div>
-
-                <div class="postconnection">
-                    <hr>
-                    <h3>Fields from server</h3>
-                    <div id="fields">
-                    </div>
-                    <hr>
-                    <button onclick="easyrtc.getFreshIceConfig();" class="postconnection"> Get Fresh ICE configuration</button>
-
-
-                    <hr>
-                    <h3> Name To Id</h3>
-                    <div >
-                        <input id="targetName" type="text" />
-                        <button onclick="getIdsOfName();">Fetch ids</button>
-                        <div id="foundIds"></div>
-                    </div>
-                </div>
-
-                <!--hide-->
-                <hr />
 
             </div>
-            <div id="footer">
-		<p><em>Instituto Federal de Educação, Ciência e Tecnologia de Santa Catarina</em></p>
-                <p><em>Ana Paula Hoog - Engenharia de Telecomunicações</em></p>
-			<p><em>Conheça o projeto EasyRTC em www.easyrtc.com</em></p>
-            </div>
-        </div>
+            
         <script type="text/javascript">
-
-        addQuickJoinButtons({
+            addQuickJoinButtons({
             room1: {roomName: "room1", numberClients: " "},
             room2: {roomName: "room2", numberClients: " "},
             room3: {roomName: "room3", numberClients: " "}
-        }
-        );
-
-        </script>
+            }
+            );
+            </script>
     </body>
+
+    <div id="footer" class="w3-content w3-padding-64 w3-text-grey w3-small w3-center">
+        <footer>
+            <p>Instituto Federal de Educação, Ciência e Tecnologia de Santa Catarina</p>
+            <p>Ana Paula Hoog - Engenharia de Telecomunicações</p>
+            <p>Conheça o Projeto EasyRTC - 
+                <a href="https://easyrtc.com">
+                    easyrtc.com
+                    </a>
+                </p>
+            </footer>
+        </div>
 </html>
+

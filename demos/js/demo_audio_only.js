@@ -1,28 +1,3 @@
-//
-//Copyright (c) 2016, Skedans Systems, Inc.
-//All rights reserved.
-//
-//Redistribution and use in source and binary forms, with or without
-//modification, are permitted provided that the following conditions are met:
-//
-//    * Redistributions of source code must retain the above copyright notice,
-//      this list of conditions and the following disclaimer.
-//    * Redistributions in binary form must reproduce the above copyright
-//      notice, this list of conditions and the following disclaimer in the
-//      documentation and/or other materials provided with the distribution.
-//
-//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-//AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-//IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-//ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-//LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-//CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-//SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-//INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-//CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-//ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-//POSSIBILITY OF SUCH DAMAGE.
-//
 var selfEasyrtcid = "";
 
 function disable(domId) {
@@ -94,7 +69,7 @@ function performCall(otherEasyrtcid) {
     easyrtc.hangupAll();
     var acceptedCB = function(accepted, caller) {
         if( !accepted ) {
-            easyrtc.showError("CALL-REJECTED", "Sorry, your call to " + easyrtc.idToName(caller) + " was rejected");
+            easyrtc.showError("Ligação Rejeitada", "Desculpa, " + easyrtc.idToName(caller) + "rejeitou sua chamada");
             enable('otherClients');
         }
     };
@@ -113,7 +88,7 @@ function loginSuccess(easyrtcid) {
     // enable("disconnectButton");
     enable('otherClients');
     selfEasyrtcid = easyrtcid;
-    document.getElementById("iam").innerHTML = "I am " + easyrtcid;
+    document.getElementById("iam").innerHTML = "ID " + easyrtcid;
 }
 
 
@@ -123,7 +98,7 @@ function loginFailure(errorCode, message) {
 
 
 function disconnect() {
-    document.getElementById("iam").innerHTML = "logged out";
+    document.getElementById("iam").innerHTML = "Desconectado";
     easyrtc.disconnect();
     console.log("disconnecting from server");
     enable("connectButton");
@@ -148,10 +123,10 @@ easyrtc.setOnStreamClosed( function (easyrtcid) {
 easyrtc.setAcceptChecker(function(easyrtcid, callback) {
     document.getElementById('acceptCallBox').style.display = "block";
     if( easyrtc.getConnectionCount() > 0 ) {
-        document.getElementById('acceptCallLabel').textContent = "Drop current call and accept new from " + easyrtcid + " ?";
+        document.getElementById('acceptCallLabel').textContent = "Interrompa a chamada atual e aceite novas " + easyrtcid + " ?";
     }
     else {
-        document.getElementById('acceptCallLabel').textContent = "Accept incoming call from " + easyrtcid + " ?";
+        document.getElementById('acceptCallLabel').textContent = "Atender a chamada de " + easyrtcid + " ?";
     }
     var acceptTheCall = function(wasAccepted) {
         document.getElementById('acceptCallBox').style.display = "none";

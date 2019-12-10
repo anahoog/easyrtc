@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <!--skip-->
-        <title>Hoog RTC: Áudio&Vídeo</title>
-        <link rel="stylesheet" type="text/css" href="../easyrtc/easyrtc.css" />
-
-        <link rel="stylesheet" type="text/css" href="css/landing.css" />
+    <html class="w3-black">
+        <meta charset="UTF-8">        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, max-scale=1.0">
+        <title>HOOG RTC</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <script type="text/javascript" src="js/prettify/prettify.js"></script>
         <script type="text/javascript" src="js/prettify/loadAndFilter.js"></script>
@@ -16,80 +16,150 @@
         <script type="text/javascript" src="../easyrtc/easyrtc.js"></script>
         <script type="text/javascript" src="js/demo_audio_video.js"></script>
 
-        <style type="text/css">
-            #demoContainer {
-                position:relative;
+        <style type="text/css" >
+            body{
+                width:100%;
+                height:100%;
+            }
+            body, h1,h2,h3,h4,h5,h6 {
+            font-family: "Montserrat", sans-serif
+            }
+            .w3-sidebar {
+            overflow-y:hidden;
+            background-color:black;
+            }
+            #main {
+                margin-left: auto;
             }
             #connectControls {
-                float:left;
-                width:200px;
-                text-align:center;
-                border: 2px solid black;
+                float:top;
+                width: auto;
+                text-align: justify;
+                border-width: auto;
             }
             #otherClients {
-                height:300px;
-                overflow-y:scroll;
+                float:left;
+                text-align: center;
+                overflow-y:hidden;
             }
             #selfVideo {
-                height:125px;
-                width:200px;
-                float:left;
-                border:1px solid gray;
-                margin-left:10px;
+                height:10%;
+                width:10%;
+                border: 2px solid #111;
+                margin-left:5px;
             }
             #callerVideo {
-                height:225px;
-                width:300px;
-                border:1px solid gray;
-                margin-left:10px;
+                margin-top: 5px;
+                height:50%;
+                width:50%;
+                border: 2px solid #111;
+                margin-left:5px;
             }
             #acceptCallBox {
                 display:none;
                 z-index:2;
                 position:absolute;
-                top:100px;
-                left:400px;
-                border:red solid 2px;
-                background-color:pink;
-                padding:15px;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="container">
-            <div id="header">
-            </div>
+                top:50%;
+                left:50%;
+                border: 2px solid #111;
+                background-color:#111;
+                padding:15px;    
+	    }
+            </style>
+           
+        <body class="w3-text-white">
+            <div class="w3-sidebar w3-center w3-bar-block w3-animate-left w3-large" style="display:none" id="mySidebar">
+                <button class="w3-bar-item w3-button " onclick="w3_close()">FECHAR &times;</button><br/>
+                
+                <a href="/index.html" class="w3-bar-item w3-button">
+                <i class="fa fa-home "></i><br/>
+                INÍCIO</a><br/>
+                                
+                <a href="demo_audio_only.html" class="w3-bar-item w3-button">
+                <i class="fas fa-phone-alt "></i><br/>
+                ÁUDIO</a><br/>
+
+                <a href="demo_audio_video.html" class="w3-bar-item w3-button">
+                <i class="fas fa-video"></i><br/>
+                VÍDEO</a><br/>
+
+                <a href="demo_data_channel_messaging.html"class="w3-bar-item w3-button">
+                <i class="fas fa-comment"></i><br/>
+                CHAT</a><br/>
+        
+                </div>
+                
             <div id="main">
+                <button id="openNav" class="w3-button w3-xlarge" onclick="w3_open()">&#9776</button>
+                </div>
 
-                <h1>Realize uma chamada de Áudio e Vídeo</h1>
-                <div id="demoContainer">
-                    <div id="connectControls">
-			<input type="checkbox" checked="checked" id="shareAudio" />Habilitar Microfone	  <br />
-                        <input type="checkbox" checked="checked" id="shareVideo" />Habilitar WebCam	  <br />
-			<input type="checkbox" checked="checked" id="expectAudio"/>Habilitar Alto falante <br />
-                        <input type="checkbox" checked="checked" id="expectVideo"/>Habilitar Vídeo	  <br />
+            <script>
+                function w3_open() {
+                    document.getElementById("main").style.marginLeft = "25%";
+                    document.getElementById("mySidebar").style.width = "25%";
+                    document.getElementById("mySidebar").style.display = "inline-block";
+                    document.getElementById("openNav").style.display = 'none';
+                    }
 
-                        <button id="connectButton" onclick="connect()">Conectar</button>
-                        <button id="disconnectButton" onclick="disconnect()">Desconectar</button>
-                        <button id="hangupButton" disabled="disabled" onclick="hangup()"<Desligar</button>
-                        <div id="iam">Você está desconectado.</div>
-                        <br />
-                        <strong>Usuários Online:</strong>
-                        <div id="otherClients"></div>
-                    </div>
+                function w3_close() {
+                    document.getElementById("main").style.marginLeft = "0%";
+                    document.getElementById("mySidebar").style.display = "none";
+                    document.getElementById("openNav").style.display = "inline-block";
+                }
+                </script>
 
-                    <div id="videos">
-                        <video autoplay="autoplay" playsinline="playsinline" id="selfVideo"  class="easyrtcMirror" muted="muted" volume="0"></video>
-                        <video autoplay="autoplay" playsinline="playsinline" id="callerVideo"></video>
-                        <div id="acceptCallBox"> <!-- Should be initially hidden using CSS -->
-                            <div id="acceptCallLabel"></div>
-			    <button id="callAcceptButton" >Atender</button> <button id="callRejectButton">Rejeitar</button>
+            <header class="w3-center">
+                <script src="https://kit.fontawesome.com/1cdf80c591.js" crossorigin="anonymous"></script>
+                </header>  
+
+            <div class="w3-center">
+                <h3 class="w3">ÁUDIO & VÍDEO</h3>
+                <br/>
+                </div>
+            
+            <div class="w3-black w3-center w3-text-white">
+                <div id="container" >
+                    <div id="main" >
+                        <div id="demoContainer">
+                            <div id="connectControls" class="w3-center">
+                                <br/>
+                                <input type="checkbox" checked="checked" id="shareAudio" />Microfone
+                                <input type="checkbox" checked="checked" id="shareVideo" />Câmera
+                                <input type="checkbox" checked="checked" id="expectAudio" />Alto Falante
+                                <input type="checkbox" checked="checked" id="expectVideo" />Visualizar<br/>
+                                <button id="connectButton" onclick="connect()"> Conectar </button>
+                                <button id="disconnectButton" onclick="disconnect()"> Desconectar </button>
+                                <button id="hangupButton" disabled="disabled" onclick="hangup()"> Desligar </button>
+                                
+                                <div id="iam">Status: DESCONECTADO</div><br/>
+                            </div><br/>
+                                <div id="otherClients">
+                                <strong>  Online  </strong><br/>
+                                </div>
+                               
+                            <div id="videos" class="w3-black">
+                                <video autoplay="autoplay" playsinline="playsinline" id="selfVideo"  class="easyrtcMirror" muted="muted" volume="0"></video>
+                                <video autoplay="autoplay" playsinline="playsinline" id="callerVideo"></video>
+                                <div id="acceptCallBox">
+                                    <div id="acceptCallLabel"></div>
+                                    <button id="callAcceptButton" >ACEITAR</button> <button id="callRejectButton">REJEITAR</button>
+                                    </div>
+                                </div>
+                            <div id="audioSinkButtons"></div>
+                            </div>
                         </div>
                     </div>
-                    <div id="audioSinkButtons">
-                    </div>
                 </div>
-            </div>
-        </div>
-    </body>
+            </body>
+
+        <footer class="w3-content  w3-text-white w3-small w3-center">
+                Instituto Federal de Educação, Ciência e Tecnologia de Santa Catarina<br/>
+                Engenharia de Telecomunicações<br/>
+                Ana Paula Hoog<br/>
+                Conheça o Projeto EasyRTC<br/>
+                <a href="https://easyrtc.com"> easyrtc.com</a>
+            </footer>
 </html>
+
+
+

@@ -1,88 +1,153 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <!--skip-->
-        <title>Hoog RTC: Áudio</title>
-        <link rel="stylesheet" type="text/css" href="../easyrtc/easyrtc.css" />
-
-        <!--hide-->
-        <link rel="stylesheet" type="text/css" href="css/landing.css" />
+    <html class="w3-black">
+        <meta charset="UTF-8">        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, max-scale=1.0">
+        <title>HOOG RTC</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <script type="text/javascript" src="js/prettify/prettify.js"></script>
         <script type="text/javascript" src="js/prettify/loadAndFilter.js"></script>
         <script type="text/javascript" src="js/prettify/jquery.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="js/prettify/prettify.css" />
 
         <script src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="../easyrtc/easyrtc.js"></script>
+        <script type="text/javascript" src="/easyrtc/easyrtc.js"></script>
         <script type="text/javascript" src="js/demo_audio_only.js"></script>
-        
-	<style type="text/css">
-            #demoContainer {
-                position:relative;
+            
+        <link rel="stylesheet" type="text/css" href="/easyrtc/easyrtc.css" />
+        <link rel="stylesheet" type="text/css" href="css/landing.css" />
+        <link rel="stylesheet" type="text/css" href="js/prettify/prettify.css" />
+              
+        </div>
+
+        <style type="text/css" >
+            body{
+                width:100%;
+                height: 100%;
             }
+            body, h1,h2,h3,h4,h5,h6 {
+            font-family: "Montserrat", sans-serif
+            }
+            
+            .w3-sidebar {
+            overflow-y:hidden;
+            background-color:black;
+            }
+            #main {
+            margin-left: auto;
+            }
+         
             #connectControls {
-                float:left;
-                width:333px;
-                text-align:center;
-                border: 2px solid black;
+                width: auto;
+                height: auto;
+                float:center;
+                border: 2px solid #111;
+                border-width: auto;
+                
             }
             #otherClients {
                 height:200px;
-                overflow-y:scroll;
-            }
+                overflow-y:hidden;
+                }
             #callerAudio {
                 /* display:none; */
                 height:10em;
                 width:10em;
                 margin-left:10px;
-            }
+                }
             #acceptCallBox {
                 display:none;
                 z-index:2;
                 position:absolute;
-                top:100px;
-                left:400px;
-                border:red solid 2px;
-                background-color:red;
+                top:50%;
+                left:50%;
+                border: 2px solid #222;
+                background-color:#222;
                 padding:15px;
-            }
-        </style>
-    </head>
+                }
+            </style>
+    
 
-<body>
-<div id="container">
-<div id="header">
-	<p>Em Construção</p>
-</div>
-<div id="main">
-	<h1>Realize uma Chamada de Áudio</h1>
-	<div id="demoContainer">
-		<div id="connectControls">
-                        <button id="connectButton" onclick="connect()">Conectar</button>
-                        <button id="hangupButton" disabled="disabled" onclick="hangup()">Desligar a Chamada</button>
-                        <div id="iam">Status: Desconectado</div>
-                        <br />
-                        <strong>Usuários Online:</strong>
-                        <div id="otherClients"></div>
+    <body class="w3-text-white">
+         <div class="w3-sidebar w3-center w3-bar-block w3-animate-left w3-large" style="display:none" id="mySidebar">
+                <button class="w3-bar-item w3-button " onclick="w3_close()">FECHAR &times;</button><br/>
+                
+                <a href="/index.html" class="w3-bar-item w3-button">
+                <i class="fa fa-home "></i><br/>
+                INÍCIO</a><br/>
+                                
+                <a href="demo_audio_only.html" class="w3-bar-item w3-button">
+                <i class="fas fa-phone-alt "></i><br/>
+                ÁUDIO</a><br/>
+    
+                <a href="demo_audio_video.html" class="w3-bar-item w3-button">
+                <i class="fas fa-video"></i><br/>
+                VÍDEO</a><br/>
+    
+                <a href="demo_data_channel_messaging.html"class="w3-bar-item w3-button">
+                <i class="fas fa-comment"></i><br/>
+                CHAT</a><br/>
+        
                 </div>
-                <div id="videos">
-                	<video id="callerAudio" autoplay="autoplay" playsinline="playsinline"></video>
-			<div id="acceptCallBox">
-				<div id="acceptCallLabel"></div>
-                        	<button id="callAcceptButton" >Atender</button> <button id="callRejectButton">Desligar</button></div>
-               		</div>
+                
+            <div id="main">
+                <button id="openNav" class="w3-button w3-xlarge" onclick="w3_open()">&#9776</button>
                 </div>
-		
-</div>
-<p></p>
-<div id="footer">
-	<p><em>Instituto Federal de Educação, Ciência e Tecnologia de Santa Catarina</em></p>
-	<p><em>2019 - Ana Paula Hoog - Engenharia de Telecomunicações</em></p>
-	<p><em>Conheça o projeto EasyRTC em www.easyrtc.com</em></p>
+    
+            <script>
+                function w3_open() {
+                    document.getElementById("main").style.marginLeft = "25%";
+                    document.getElementById("mySidebar").style.width = "25%";
+                    document.getElementById("mySidebar").style.display = "block";
+                    document.getElementById("openNav").style.display = 'none';
+                    }
+    
+                function w3_close() {
+                    document.getElementById("main").style.marginLeft = "0%";
+                    document.getElementById("mySidebar").style.display = "none";
+                    document.getElementById("openNav").style.display = "block";
+                }
+                </script>
 
-</div>
-</div>
-</div>
-</body>
+        <header class="w3-center">
+            <script src="https://kit.fontawesome.com/1cdf80c591.js" crossorigin="anonymous"></script>
+            <h1 class="w3">Chamada de Voz</h1>
+            <br/>
+            </header>  
+   
+        <div class="w3-black w3-center w3-text-grey">
+            <div id="container">
+                <div id="main" > 
+                    <div id="demoContainer" >
+                        <div id="connectControls" >
+                            <button id="connectButton" onclick="connect()">Conectar</button>
+                            <button id="hangupButton" disabled="disabled" onclick="hangup()">Desligar</button>
+                            <div id="iam">Status: Desconectado</div>
+                            <br />
+                            <strong>Usuários Conectados:</strong>
+                            <div id="otherClients"></div>
+                            </div>
+                        <div id="videos">
+                            <video id="callerAudio"></video>
+                            <div id="acceptCallBox"> 
+                                <div id="acceptCallLabel"></div>
+                                <button id="callAcceptButton" >Aceitar</button> 
+                                <button id="callRejectButton">Rejeitar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+    
+    <footer class="w3-content  w3-text-white w3-small w3-center">
+        Instituto Federal de Educação, Ciência e Tecnologia de Santa Catarina<br/>
+        Engenharia de Telecomunicações<br/>
+        Ana Paula Hoog<br/>
+        Conheça o Projeto EasyRTC<br/>
+        <a href="https://easyrtc.com"> easyrtc.com</a>
+        </footer>
 </html>
+

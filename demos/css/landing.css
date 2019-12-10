@@ -1,11 +1,10 @@
 
 body {
-    background-image:url("/home/anahoog/easyrtc/demos/images/website-rays.png");
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 
 #container {
-    width:1024px;
+    width:auto;
     margin-left: auto;
     margin-right:auto;
 
@@ -16,17 +15,9 @@ body {
     border-radius:10px;
 }
 
-#logo_easyrtc {
-    margin-top:5px;
-    margin-left:5px;
-}
-#logo_priologic {
-    margin-top:5px;
-    margin-right:5px;
-}
 
 #menu {
-    text-align: right;
+    text-align: center;
     clear: both;
     padding-bottom: 2px;
     padding-top: 2px;
@@ -34,16 +25,16 @@ body {
 .menu_item {
     display: inline;
     text-decoration: none;
-    border-color: gray;
+    border-color: black;
     border-width: 2px;
     border-style: outset;
-    color: white;
+    color: black;
     padding: 0 3px 0 3px;
     background-color: rgba(0,0,0,.4);
 }
 .menu_item:hover {
     border-style:inset;
-    background-color: rgba(100,100,100,0);
+    
 }
 .menu_link {
     text-decoration:none;
@@ -52,42 +43,12 @@ body {
     text-decoration:underline;
 }
 
-
-
 #main {
-    background-color:white;
+    background-color:black;
     overflow:hidden;
     padding-left: 10px;
     padding-right: 10px;
 }
-
-#footer {
-    font-size: small;
-    padding: 5px;
-    color:white;
-    min-height:60px;
-}
-#footer p {
-    margin: 0;
-    color:white;
-    text-align:center;
-}
-#footer a {
-    color:white;
-}
-#license {
-    font-size: x-small;
-}
-#logo_priologic {
-    float:left;
-    padding-top: 10px;
-    margin-right: 10px;
-}
-#logo_pb_easyrtc {
-    float:right;
-    margin-left: 10px;
-}
-
 
 .demo_table {
     border-collapse:collapse;
@@ -112,7 +73,7 @@ hr {
 }
 
 .prettyprint {
-     white-space: pre-wrap;
+
      max-height:400px;
      overflow-y:scroll;
 }
